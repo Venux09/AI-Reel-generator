@@ -67,7 +67,7 @@ it's not like my original project but in future i will make it mine by adding ma
 ---
 *Not perfect. Not finished. But real and built by me.* 🚀
 
-##start ficing the project:-
+##start fixing the project:-
 i want to make this project work so i am going to make it work using different methonds ..
 today is 29 march i am going to change it main compenents like it's interface and wanna make it more presentful ..
 with the i want to add something mroe to this . i am gonna deploy it and gonna add this login system to it . and gonna change the ffmpeg to make it work..and i am going too add storage where you can write your ideas and you can chat to the ai for ideas for the reel it will be the great improveement in it..
