@@ -1,14 +1,12 @@
 
 import os
-import uuid
+import uuid 
 from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
 from config import ELEVENLABS_API_KEY
 
  
-client = ElevenLabs(
-    api_key=ELEVENLABS_API_KEY,
-)
+client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 
 
 def text_to_speech_file(text: str, folder: str) -> str:
@@ -20,7 +18,7 @@ def text_to_speech_file(text: str, folder: str) -> str:
         model_id="eleven_turbo_v2_5", # use the turbo model for low latency
         # Optional voice settings that allow you to customize the output
         voice_settings=VoiceSettings(
-            stability=0.0,
+            stability=0.4,
             similarity_boost=1.0,
             style=0.0,
             use_speaker_boost=True,
@@ -46,4 +44,3 @@ def text_to_speech_file(text: str, folder: str) -> str:
     return save_file_path
 
 
-# text_to_speech_file("Hey I am a good boy and its the python course", "ac9a7034-2bf9-11f0-b9c0-ad551e1c593a")
