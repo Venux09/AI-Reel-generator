@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request ,url_for,redirect
 import uuid
 from werkzeug.utils import secure_filename
 import os
@@ -7,7 +7,8 @@ UPLOAD_FOLDER = 'user_uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER#from flask import redirect, url_for
+#return redirect(url_for('gallery'))
  
 
 @app.route("/")
@@ -31,15 +32,15 @@ def create():
                 if(not(os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], rec_id)))):#checking if any folder exists of this content to avoiding the error 
                     os.mkdir(os.path.join(app.config['UPLOAD_FOLDER'], rec_id))#making the one if that not exist that's why it was checking the error 
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], rec_id,  filename))
-                input_files.append(file.filename)
-                print(file.filename)
+                input_files.append(filename)
+                print(filename)
             # Capture the description and save it to a file
             with open(os.path.join(app.config['UPLOAD_FOLDER'], rec_id, "desc.txt"), "w") as f:#making the files in that unique id or named folder adding the desc.txt
                 f.write(desc)
         for fl in input_files:#for writing the duration 
             with open(os.path.join(app.config['UPLOAD_FOLDER'], rec_id,  "input.txt"), "a") as f:
                 f.write(f"file '{fl}'\nduration 1\n")
-
+        return redirect(url_for('gallery'))
 
     return render_template("create.html", myid=myid)
 
