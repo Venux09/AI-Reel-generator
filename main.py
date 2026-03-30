@@ -16,34 +16,34 @@ def home():
 
 @app.route("/create", methods=["GET", "POST"])
 def create():
-    myid = uuid.uuid1()
+    myid = uuid.uuid1()#It's a 128-bit value used to uniquely identify something — a user, a session, a file, a record — without needing a central authority to assign it.
     if request.method == "POST":
-        print(request.files.keys())
-        rec_id = request.form.get("uuid")
+        print(request.files.keys())#werkzeug utils is the method too get this types of function like request files 
+        rec_id = request.form.get("uuid")#reading the data which was sent from the html via post form
         desc = request.form.get("text")
         input_files = []
-        for key, value in request.files.items():
+        for key, value in request.files.items():#use to the store the images and text which can be sent to the eleven labs key or ffmpeg
             print(key, value)
             # Upload the file
             file = request.files[key]
             if file:
-                filename = secure_filename(file.filename)
-                if(not(os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], rec_id)))):
-                    os.mkdir(os.path.join(app.config['UPLOAD_FOLDER'], rec_id))
+                filename = secure_filename(file.filename)#for cleaning and securing the file 
+                if(not(os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], rec_id)))):#checking if any folder exists of this content to avoiding the error 
+                    os.mkdir(os.path.join(app.config['UPLOAD_FOLDER'], rec_id))#making the one if that not exist that's why it was checking the error 
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], rec_id,  filename))
                 input_files.append(file.filename)
                 print(file.filename)
             # Capture the description and save it to a file
-            with open(os.path.join(app.config['UPLOAD_FOLDER'], rec_id, "desc.txt"), "w") as f:
+            with open(os.path.join(app.config['UPLOAD_FOLDER'], rec_id, "desc.txt"), "w") as f:#making the files in that unique id or named folder adding the desc.txt
                 f.write(desc)
-        for fl in input_files:
+        for fl in input_files:#for writing the duration 
             with open(os.path.join(app.config['UPLOAD_FOLDER'], rec_id,  "input.txt"), "a") as f:
                 f.write(f"file '{fl}'\nduration 1\n")
 
 
     return render_template("create.html", myid=myid)
 
-@app.route("/gallery")
+@app.route("/gallery")#gallery section of the vidcodex which saves the reels created 
 def gallery():
     reels = os.listdir("static/reels")
     print(reels)
