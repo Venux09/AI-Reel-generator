@@ -19,17 +19,22 @@ def create_reel(folder):#func for creating the reel using input.txt and audio.mp
     print("CR - ", folder)
 
 if __name__ == "__main__":
-    while True:
-        print("Processing queue...")
-        with open("done.txt", "r") as f:#opens the done.txt which we have created to save the useruploads folder path or filename
-            done_folders = f.readlines()
+        if not os.path.exists("done.txt"):#if  done.txt does not exist it will create 
+            open("done.txt", "w").close()
+        while True:
+            print("Processing queue...")
+            with open("done.txt", "r") as f:#opens the done.txt which we have created to save the useruploads folder path or filename
+                done_folders = f.readlines()
 
-        done_folders = [f.strip() for f in done_folders]
-        folders = os.listdir("user_uploads") 
-        for folder in folders:
-            if(folder not in done_folders): 
-                text_to_audio(folder) 
-                create_reel(folder) # Convert the images and audio.mp3 inside the folder to a reel
-                with open("done.txt", "a") as f:
-                    f.write(folder + "\n")
-        time.sleep(4)
+            done_folders = [f.strip() for f in done_folders]
+            folders = os.listdir("user_uploads") 
+            for folder in folders:
+                if folder not in done_folders: 
+                    try:
+                        text_to_audio(folder) 
+                        create_reel(folder) # Convert the images and audio.mp3 inside the folder to a reel
+                        with open("done.txt", "a") as f:
+                            f.write(folder + "\n")
+                    except Exception as e:
+                        print(f"Error processing {folder}: {e}")
+            time.sleep(4)
