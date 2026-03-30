@@ -3,10 +3,10 @@ import os
 
 from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
-from config import ELEVENLABS_API_KEY
+from dotenv import load_dotenv
 
- 
-client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
+load_dotenv() 
+client = ElevenLabs(api_key=os.getenv("ELEVENLABS_API_KEY"))
 
 
 def text_to_speech_file(text: str, folder: str) -> str:
