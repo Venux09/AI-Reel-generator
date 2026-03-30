@@ -19,7 +19,7 @@ def create():
     myid = uuid.uuid1()#It's a 128-bit value used to uniquely identify something — a user, a session, a file, a record — without needing a central authority to assign it.
     if request.method == "POST":
         print(request.files.keys())#werkzeug utils is the method too get this types of function like request files 
-        rec_id = request.form.get("uuid")#reading the data which was sent from the html via post form
+        rec_id = str(myid)#reading the data which was sent from the html via post form
         desc = request.form.get("text")
         input_files = []
         for key, value in request.files.items():#use to the store the images and text which can be sent to the eleven labs key or ffmpeg
