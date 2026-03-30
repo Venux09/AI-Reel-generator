@@ -21,6 +21,10 @@ def create_reel(folder):#func for creating the reel using input.txt and audio.mp
 if __name__ == "__main__":
         if not os.path.exists("done.txt"):#if  done.txt does not exist it will create 
             open("done.txt", "w").close()
+        failed_folders = []
+        if os.path.exists("failed.txt"):
+            with open("failed.txt", "r") as f:
+                failed_folders = [f.strip() for f in f.readlines()]
         while True:
             print("Processing queue...")
             with open("done.txt", "r") as f:#opens the done.txt which we have created to save the useruploads folder path or filename
@@ -37,4 +41,10 @@ if __name__ == "__main__":
                             f.write(folder + "\n")
                     except Exception as e:
                         print(f"Error processing {folder}: {e}")
+                    except Exception as e:
+                       
+                       print(f"Error processing {folder}: {e}")
+                       with open("failed.txt", "a") as f:
+                          
+                          f.write(folder + "\n")
             time.sleep(4)
