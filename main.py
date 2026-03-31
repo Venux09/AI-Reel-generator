@@ -54,7 +54,7 @@ def gallery():
 @app.route("/chat",methods = ["POST"])
 def chat():
     data = request.json
-    print(data)
+    
     if not data or "message" not in data:
         return jsonify({"reply":"message required"}),400
     try: 
