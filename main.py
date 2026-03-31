@@ -58,4 +58,9 @@ def chat():
         return jsonify({"reply":"message required"}),400
     reply = AI_CHAT(data["message"],data.get('history',[]))
     return jsonify({'reply':reply})
+
+
+@app.route("/aichat")
+def aichat():
+    return render_template("chat.html")
 app.run(debug=True)
