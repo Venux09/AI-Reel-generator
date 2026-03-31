@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request ,url_for,redirect
+from flask import Flask, render_template, request ,url_for,redirect,jsonify
 import uuid
 from werkzeug.utils import secure_filename
+from ai_chat import AI_CHAT
 import os
 
 UPLOAD_FOLDER = 'user_uploads'
@@ -50,4 +51,11 @@ def gallery():
     print(reels)
     return render_template("gallery.html", reels=reels)
 
+@app.route("/chat",methods = ["POST"])
+def chat():
+    data = request.json
+    if data or "message" not in data:
+        return jsonify({"reply":"message required"}),400
+    reply = AI_CHAT(data["message"],data.get('history',[]))
+    return jsonify({'reply':reply})
 app.run(debug=True)
