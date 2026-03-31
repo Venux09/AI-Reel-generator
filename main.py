@@ -54,10 +54,17 @@ def gallery():
 @app.route("/chat",methods = ["POST"])
 def chat():
     data = request.json
-    if data or "message" not in data:
+    print(data)
+    if not data or "message" not in data:
         return jsonify({"reply":"message required"}),400
-    reply = AI_CHAT(data["message"],data.get('history',[]))
-    return jsonify({'reply':reply})
+    try: 
+        reply = AI_CHAT(data["message"], data.get("history", []))
+        return jsonify({"reply": reply})
+    except Exception as e:
+        print(f"AI_CHAT error: {e}")  # ← will show exact error
+        return jsonify({"error": str(e)}), 500
+
+
 
 
 @app.route("/aichat")
