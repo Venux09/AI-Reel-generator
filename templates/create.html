@@ -1,37 +1,299 @@
 {% extends "base.html" %}
 
-{% block title %}Create Reel - AI Reel Generator{% endblock %}
+{% block title %}Create Reel — AIVidCodex{% endblock %}
 
-{% block extra_css %} 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
+{% block extra_css %}
+<style>
+.create-section {
+    min-height: 100vh;
+    padding: 8rem 2rem 4rem;
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.create-container {
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+    animation: fadeUp 0.6s ease forwards;
+}
+
+.create-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.create-header h1 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+}
+
+.create-header p {
+    font-size: 0.85rem;
+    color: var(--white-dim);
+    font-weight: 300;
+    letter-spacing: 0.03em;
+}
+
+.create-form {
+    padding: 2.5rem;
+}
+
+/* steps */
+.form-step {
+    margin-bottom: 2rem;
+}
+
+.step-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.step-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(74,158,255,0.15);
+    border: 1px solid var(--border-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-family: var(--font-tech);
+    color: var(--blue-soft);
+    flex-shrink: 0;
+}
+
+.step-label span {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--white-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* file inputs */
+#fileInputs { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.file-input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: rgba(74,158,255,0.04);
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    padding: 0.5rem 0.75rem;
+    transition: border-color 0.2s ease;
+}
+
+.file-input-group:focus-within {
+    border-color: var(--border-glow);
+}
+
+.file-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0.3rem 0;
+}
+
+.file-input::-webkit-file-upload-button {
+    background: rgba(74,158,255,0.15);
+    border: 1px solid var(--border-glow);
+    color: var(--blue-soft);
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-family: var(--font-body);
+    transition: all 0.2s ease;
+    margin-right: 0.5rem;
+}
+
+.file-input::-webkit-file-upload-button:hover {
+    background: rgba(74,158,255,0.25);
+}
+
+.add-file-btn {
+    background: transparent;
+    border: 1px dashed var(--border-glow);
+    color: var(--blue-soft);
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-family: var(--font-body);
+    letter-spacing: 0.06em;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin-top: 0.4rem;
+}
+
+.add-file-btn:hover {
+    background: rgba(74,158,255,0.08);
+    border-color: var(--blue-glow);
+}
+
+.remove-file-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255,80,80,0.1);
+    border: 1px solid rgba(255,80,80,0.2);
+    color: rgba(255,120,120,0.8);
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.remove-file-btn:hover {
+    background: rgba(255,80,80,0.2);
+    border-color: rgba(255,80,80,0.5);
+}
+
+/* textarea */
+.voice-textarea {
+    width: 100%;
+    background: rgba(74,158,255,0.04);
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 300;
+    line-height: 1.7;
+    resize: vertical;
+    min-height: 110px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.voice-textarea:focus { border-color: var(--border-glow); }
+.voice-textarea::placeholder { color: rgba(240,244,255,0.3); }
+
+/* submit */
+.submit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.submit-hint {
+    font-size: 0.73rem;
+    color: var(--white-dim);
+    font-weight: 300;
+}
+
+.submit-hint i { color: var(--cyan-firefly); margin-right: 4px; }
+
+.submit-btn {
+    padding: 0.8rem 2.5rem;
+    background: var(--blue-glow);
+    color: var(--night-deep);
+    border: none;
+    border-radius: 30px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: var(--blue-soft);
+    box-shadow: 0 0 25px rgba(74,158,255,0.35);
+    transform: translateY(-2px);
+}
+
+.submit-btn:active { transform: translateY(0); }
+
+.divider {
+    height: 1px;
+    background: var(--border-soft);
+    margin: 1.5rem 0;
+}
+</style>
 {% endblock %}
 
 {% block content %}
-<section class="upload-section">
-    <div class="container">
-        <div class="upload-container">
-            <h1 class="upload-title">Create Your Reel</h1>
-            <p class="upload-instructions">Upload your video files to create an amazing reel. You can upload multiple files.</p>
-            
-            <form action="/create" enctype="multipart/form-data" method="post" class="dropzone" id="myDropzone" >
-                <div class="fallback">
+<section class="create-section">
+    <div class="create-container">
+        <div class="create-header">
+            <h1>Create Your Reel</h1>
+            <p>Upload images, write your voiceover — we handle the rest.</p>
+        </div>
+
+        <div class="create-form glass-card">
+            <form action="{{ url_for('create') }}" enctype="multipart/form-data" method="post">
+                <input name="uuid" type="hidden" value="{{ myid }}">
+
+                <!-- Step 1: Files -->
+                <div class="form-step">
+                    <div class="step-label">
+                        <div class="step-num">01</div>
+                        <span>Upload Images</span>
+                    </div>
                     <div id="fileInputs">
                         <div class="file-input-group">
-                            <input name="file1" type="file" class="file-input" />
-                            <input name="uuid" type="hidden" value="{{myid}}">
+                            <input name="file1" type="file" class="file-input" accept="image/*" />
                             <button type="button" class="remove-file-btn" onclick="removeFileInput(this)" disabled>×</button>
                         </div>
                     </div>
-                    <button type="button" class="add-file-btn" onclick="addFileInput()">+ Add File</button>
+                    <button type="button" class="add-file-btn" onclick="addFileInput()">+ Add Another Image</button>
                 </div>
-                
-                <div class="text-input-container">
-                    <textarea class="text-input" id="textInput" name="text" placeholder="Enter your text to be added as voice here..." rows="4"></textarea>
+
+                <div class="divider"></div>
+
+                <!-- Step 2: Description -->
+                <div class="form-step">
+                    <div class="step-label">
+                        <div class="step-num">02</div>
+                        <span>Voiceover Script</span>
+                    </div>
+                    <textarea
+                        class="voice-textarea"
+                        name="text"
+                        placeholder="Write what you want the AI to say in your reel... e.g. 'Welcome to the world of possibilities. Every moment is a new beginning.'"
+                        rows="4"
+                    ></textarea>
                 </div>
-                
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    Create Reel
-                </button>
+
+                <div class="divider"></div>
+
+                <!-- Submit -->
+                <div class="submit-row">
+                    <p class="submit-hint">
+                        <i class="fas fa-circle-info"></i>
+                        Generation takes ~30 seconds in background
+                    </p>
+                    <button type="submit" class="submit-btn">
+                        Generate Reel <i class="fas fa-wand-magic-sparkles"></i>
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -40,23 +302,22 @@
 
 {% block extra_js %}
 <script>
-    let fileCounter = 2; // Start from 2 since we already have file1
+    let fileCounter = 2;
 
     function addFileInput() {
         const fileInputs = document.getElementById('fileInputs');
-        const newFileInput = document.createElement('div');
-        newFileInput.className = 'file-input-group';
-        newFileInput.innerHTML = `
-            <input name="file${fileCounter}" type="file" class="file-input" />
+        const div = document.createElement('div');
+        div.className = 'file-input-group';
+        div.innerHTML = `
+            <input name="file${fileCounter}" type="file" class="file-input" accept="image/*" />
             <button type="button" class="remove-file-btn" onclick="removeFileInput(this)">×</button>
         `;
-        fileInputs.appendChild(newFileInput);
+        fileInputs.appendChild(div);
         fileCounter++;
     }
 
-    function removeFileInput(button) {
-        const fileInputGroup = button.parentElement;
-        fileInputGroup.remove();
+    function removeFileInput(btn) {
+        btn.parentElement.remove();
     }
 </script>
-{% endblock %} 
+{% endblock %}

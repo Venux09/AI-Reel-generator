@@ -1,19 +1,247 @@
 {% extends "base.html" %}
 
-{% block title %}Gallery - AI Reel Generator{% endblock %}
+{% block title %}Gallery — AIVidCodex{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
+<style>
+.gallery-section {
+    min-height: 100vh;
+    padding: 8rem 2rem 5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.gallery-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+    animation: fadeUp 0.5s ease forwards;
+}
+
+.reel-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.9rem;
+    background: rgba(74,158,255,0.08);
+    border: 1px solid var(--border-glow);
+    border-radius: 20px;
+    font-size: 0.7rem;
+    color: var(--blue-soft);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.2rem;
+    font-family: var(--font-body);
+}
+
+/* grid */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* reel card */
+.reel-card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border-soft);
+    aspect-ratio: 9/16;
+    background: var(--night-card);
+    transition: all 0.3s ease;
+    animation: fadeUp 0.5s ease forwards;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.reel-card:nth-child(1) { animation-delay: 0.05s; }
+.reel-card:nth-child(2) { animation-delay: 0.1s; }
+.reel-card:nth-child(3) { animation-delay: 0.15s; }
+.reel-card:nth-child(4) { animation-delay: 0.2s; }
+.reel-card:nth-child(5) { animation-delay: 0.25s; }
+.reel-card:nth-child(6) { animation-delay: 0.3s; }
+
+.reel-card:hover {
+    border-color: var(--blue-glow);
+    box-shadow: 0 8px 32px rgba(74,158,255,0.2);
+    transform: translateY(-6px);
+}
+
+.reel-card video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* overlay */
+.reel-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(2,11,24,0.9) 0%,
+        rgba(2,11,24,0.3) 40%,
+        transparent 70%
+    );
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.reel-card:hover .reel-overlay { opacity: 1; }
+
+.reel-play {
+    align-self: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(74,158,255,0.2);
+    border: 2px solid var(--blue-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 1rem;
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+    margin-top: 40%;
+}
+
+.reel-card:hover .reel-play {
+    background: rgba(74,158,255,0.4);
+    transform: scale(1.1);
+}
+
+.reel-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.reel-label {
+    font-size: 0.7rem;
+    color: var(--white-dim);
+    font-family: var(--font-body);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.reel-download {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: rgba(74,158,255,0.15);
+    border: 1px solid var(--border-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--blue-soft);
+    font-size: 0.75rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.reel-download:hover {
+    background: rgba(74,158,255,0.3);
+    color: var(--white);
+}
+
+/* empty state */
+.empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    animation: fadeUp 0.5s ease forwards;
+}
+
+.empty-state .empty-icon {
+    font-size: 3rem;
+    color: var(--border-glow);
+    margin-bottom: 1.2rem;
+    display: block;
+}
+
+.empty-state h3 {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--white-dim);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.04em;
+}
+
+.empty-state p {
+    font-size: 0.82rem;
+    color: rgba(240,244,255,0.3);
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 600px) {
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+}
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="container gallery-container">
-    <h1 class="gallery-title">Reel Gallery</h1>
+<section class="gallery-section">
+    <div class="gallery-header">
+        <div class="reel-count">✦ {{ reels|length }} Reel{{ 's' if reels|length != 1 }} Created</div>
+        <h1 class="section-title">Reel <span>Gallery</span></h1>
+        <div class="glow-divider"></div>
+        <p class="section-sub">All your AI-generated reels in one place.</p>
+    </div>
+
+    {% if reels %}
     <div class="gallery-grid">
         {% for reel in reels %}
-            <video src="/static/reels/{{reel}}" controls></video>
+        <div class="reel-card">
+            <video src="/static/reels/{{ reel }}" loop muted preload="metadata"></video>
+            <div class="reel-overlay">
+                <div class="reel-play" onclick="togglePlay(this, event)">
+                    <i class="fas fa-play" id="icon-{{ loop.index }}"></i>
+                </div>
+                <div class="reel-info">
+                    <span class="reel-label">Reel #{{ loop.index }}</span>
+                    <a href="/static/reels/{{ reel }}" download class="reel-download">
+                        <i class="fas fa-download"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
         {% endfor %}
- 
     </div>
-</div>
-{% endblock %} 
+
+    {% else %}
+    <div class="empty-state">
+        <span class="empty-icon"><i class="fas fa-film"></i></span>
+        <h3>No Reels Yet</h3>
+        <p>Your generated reels will appear here.</p>
+        <a href="/create" class="cta-btn solid">Create Your First Reel</a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function togglePlay(btn, e) {
+    e.stopPropagation();
+    const card = btn.closest('.reel-card');
+    const video = card.querySelector('video');
+    const icon = btn.querySelector('i');
+    if (video.paused) {
+        video.play();
+        icon.className = 'fas fa-pause';
+    } else {
+        video.pause();
+        icon.className = 'fas fa-play';
+    }
+}
+</script>
+{% endblock %}
