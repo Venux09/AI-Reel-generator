@@ -67,7 +67,21 @@ it's not like my original project but in future i will make it mine by adding ma
 ---
 *Not perfect. Not finished. But real and built by me.* 🚀
 
-##start fixing the project:-
+## start fixing the project:-
 i want to make this project work so i am going to make it work using different methonds ..
 today is 29 march i am going to change it main compenents like it's interface and wanna make it more presentful ..
 with the i want to add something mroe to this . i am gonna deploy it and gonna add this login system to it . and gonna change the ffmpeg to make it work..and i am going too add storage where you can write your ideas and you can chat to the ai for ideas for the reel it will be the great improveement in it..
+## day--one 
+-->starting fixing the projects lot of debuggs comed like if i have to say in done.txt the input was not saving or you can say .
+--> i tried many methods but nothing worked like try and except error 
+---> i noticed one thing that files are saving like photos , text to audio is genrating and also user uploads are working 
+---> then i tried more like trying to make the generation.py work in flask app but can't.
+---> then i noticed this thing that  everything is created but it is not generating the reel
+---> and reeel could be only created from ffmpeg installed in our computer
+---> then i figured it out that generation_process.py is not running in the flask backened.
+## day --two 
+--> today i tried 2 things 
+---> i tried to threadng the generation_process.py  in main.py i did everything right it was not throwing the  error . but it not worked 
+---> i added ai system in the ai reel generator it give suggestion and tell description and ideas
+---> improved the ui and ux
+---> improved the featured creation it looks good now ..
