@@ -68,12 +68,13 @@ def chat():
 
 
 def generation_process():
-    T1 = threading.Thread(target = text_to_audio())
-    T2 = threading.Thread(target=create_reel())
-    T1.daemon = True
-    T2.daemon = True
-    T1.start()
-    T2.start()
+    while True:
+            T1 = threading.Thread(target = text_to_audio)
+            T2 = threading.Thread(target=create_reel)
+            T1.daemon = True
+            T2.daemon = True
+            T1.start()
+            T2.start()
 
 
 @app.route("/aichat")
