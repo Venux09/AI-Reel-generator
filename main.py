@@ -71,7 +71,8 @@ def chat():
 T1 = threading.Thread(target =run_worker)
 T1.daemon = True
 T1.start()
-          
+
+                
 
 
 @app.route("/aichat")
