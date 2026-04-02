@@ -68,7 +68,7 @@ def chat():
 
 
 
-T1 = threading.Thread(target =run_worker())
+T1 = threading.Thread(target =run_worker)
 T1.daemon = True
 T1.start()
           
@@ -77,4 +77,4 @@ T1.start()
 @app.route("/aichat")
 def aichat():
     return render_template("chat.html")
-app.run(debug=True,user_reloader= False)
+app.run(debug=True,use_reloader= False)
