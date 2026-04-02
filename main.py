@@ -3,7 +3,8 @@ import uuid
 from werkzeug.utils import secure_filename
 from ai_chat import AI_CHAT
 import os
-import threading 
+import subprocess
+import sys
 from generate_process import run_worker
 
 UPLOAD_FOLDER = 'user_uploads'
@@ -67,10 +68,23 @@ def chat():
         return jsonify({"error": str(e)}), 500
 
 
+# @app.route("/run_worker")
+# def worker():
+#     subprocess.run(["python","generate_process.py"])
+#     return "function--exquited"
+@app.route('/start-backend')
+def start_backend():
+    # Use Popen to launch in background
+    # Use sys.executable to ensure the same Python env is used
+    process = subprocess.Popen(
+        [sys.executable, 'generate_process.py'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True
+    )
+    return jsonify({"message": "Backend started", "pid": process.pid})
 
-T1 = threading.Thread(target =run_worker)
-T1.daemon = True
-T1.start()
+
 
                 
 

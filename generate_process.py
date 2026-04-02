@@ -4,9 +4,10 @@ from text_to_audio import text_to_speech_file
 import time
 import subprocess
 
-def run_worker():
-    while True:
-        try:    
+
+while True:
+        if __name__=="__main__":
+           
             def text_to_audio(folder):
                 print("TTA - ", folder)#print the folder name 
                 with open(f"user_uploads/{folder}/desc.txt") as f:#to read the text user has give in the desc.txt
@@ -50,5 +51,3 @@ def run_worker():
 
                                     f.write(folder + "\n")
                     time.sleep(4)
-        except Exception as e:
-                print("error of this function is :",e)
