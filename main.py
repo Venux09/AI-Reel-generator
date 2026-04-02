@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 from ai_chat import AI_CHAT
 import os
 import threading 
-from generate_process import text_to_audio,create_reel
+from generate_process import run_worker
 
 UPLOAD_FOLDER = 'user_uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -67,17 +67,14 @@ def chat():
         return jsonify({"error": str(e)}), 500
 
 
-def generation_process():
-    while True:
-            T1 = threading.Thread(target = text_to_audio)
-            T2 = threading.Thread(target=create_reel)
-            T1.daemon = True
-            T2.daemon = True
-            T1.start()
-            T2.start()
+
+T1 = threading.Thread(target =run_worker())
+T1.daemon = True
+T1.start()
+          
 
 
 @app.route("/aichat")
 def aichat():
     return render_template("chat.html")
-app.run(debug=True)
+app.run(debug=True,user_reloader= False)
