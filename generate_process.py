@@ -5,8 +5,7 @@ import time
 import subprocess
 
 
-while True:
-        if __name__=="__main__":
+def run_worker():
            
             def text_to_audio(folder):
                 print("TTA - ", folder)#print the folder name 
@@ -15,20 +14,20 @@ while True:
                     print(text, folder)
                     text_to_speech_file(text, folder)
 
-                def create_reel(folder):#func for creating the reel using input.txt and audio.mp4 then ffmpeg do the work
+            def create_reel(folder):#func for creating the reel using input.txt and audio.mp4 then ffmpeg do the work
                     command = f'''ffmpeg -f concat -safe 0 -i user_uploads/{folder}/input.txt -i user_uploads/{folder}/audio.mp3 -vf "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black" -c:v libx264 -c:a aac -shortest -r 30 -pix_fmt yuv420p static/reels/{folder}.mp4'''
                     subprocess.run(command, shell=True, check=True)#subprocess help in running the command in the terminal 
                                                                                                         
                     print("CR - ", folder)
 
 
-                if not os.path.exists("done.txt"):#if  done.txt does not exist it will create 
+            if not os.path.exists("done.txt"):#if  done.txt does not exist it will create 
                                                                                                         open("done.txt", "w").close()
-                failed_folders = []
-                if os.path.exists("failed.txt"):
+            failed_folders = []
+            if os.path.exists("failed.txt"):
                     with open("failed.txt", "r") as f:
                         failed_folders = [f.strip() for f in f.readlines()]
-                while True:
+            while True:
                     print("Processing queue...")
                     with open("done.txt", "r") as f:#opens the done.txt which we have created to save the useruploads folder path or filename
                         done_folders = f.readlines()
